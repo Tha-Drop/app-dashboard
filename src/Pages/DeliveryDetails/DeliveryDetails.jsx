@@ -17,38 +17,38 @@ const DeliveryDetails = () => {
     key: `#${index + 1}`,
     _id: guest?._id,
     name: guest.name || 'N/A',
-    img: guest.avatar ? guest.avatar : 'default-avatar.png',
-    address: guest.auth.email || 'N/A', 
-    dob: guest.dateOfBirth || 'N/A',
+    img: guest.avatar || null,
+    address: guest.address || guest.auth?.email || 'N/A',
+    dob: guest.dateOfBirth ? new Date(guest.dateOfBirth).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) : 'N/A',
     contact: guest.phoneNumber || 'N/A',
-    email: guest.auth.email,
-    isBlocked: guest.auth.isBlocked,
-    license: <img className='w-[70px] h-[70px]' src={`${imageUrl}/${guest.licensePhoto}`} alt=''/>|| 'N/A',
+    email: guest.auth?.email || 'N/A',
+    isBlocked: guest.auth?.isBlocked,
+    license: guest.licenseNumber || 'N/A',
   }));
 
   return (
-    <div className='p-5 bg-white rounded-md'>
-      <div className="flex justify-between item-center">
-        <div className="flex items-center gap-2">
-          <Link to={-1}><FaArrowLeft size={18} className='text-[var(--primary-color)]' /></Link>
-          <span className='font-semibold text-[20px]'>Guest Management</span>
+    <div className='p-3 sm:p-4 md:p-6 bg-white rounded-lg'>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <div className="flex items-center gap-3">
+          <Link to={-1}><FaArrowLeft size={18} className='text-[#EFC11F]' /></Link>
+          <span className='font-semibold text-lg sm:text-[20px] text-[#020123]'>Guest Management</span>
         </div>
-        <div>
+        <div className="w-full sm:w-auto">
           <div className="relative">
             <input
-             onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               type="text"
               placeholder="Search here..."
-              className="w-full pl-10 pr-4 py-1 rounded-md border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1"
+              className="w-full sm:w-[220px] pl-10 pr-4 py-2.5 sm:py-2 rounded-md bg-white border border-gray-300 focus:outline-none focus:border-[#EFC11F] text-sm"
             />
-            <span className="absolute left-3 top-2.5 text-gray-400">
-              <CiSearch />
+            <span className="absolute left-3 top-3 sm:top-2.5 text-gray-400">
+              <CiSearch size={18} />
             </span>
           </div>
         </div>
       </div>
 
-      <div className='mt-5'>
+      <div>
         <GuestHostInfo dataSource={dataSource} />
       </div>
     </div>

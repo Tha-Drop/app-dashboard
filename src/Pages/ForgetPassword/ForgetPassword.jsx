@@ -1,49 +1,91 @@
-import { Button, Form, Input, Typography } from "antd";
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Form, Input, Spin } from "antd";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForgotPasswordMutation } from "../../redux/Api/user";
+import { toast } from "react-toastify";
 
 const ForgetPassword = () => {
-    const [forgotPassword] = useForgotPasswordMutation()
+    const [forgotPassword] = useForgotPasswordMutation();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
     const onFinish = (values) => {
-        console.log(values);
-        forgotPassword(values).unwrap()
+        setLoading(true);
+        forgotPassword(values)
+            .unwrap()
             .then((payload) => {
-                alert('success')
-                navigate('/auth/otp')
-                localStorage.setItem('email',  values?.email)
+                toast.success("Verification code sent to your email!");
+                navigate("/auth/otp");
+                localStorage.setItem("email", values?.email);
             })
-            .catch((error) => console.error(error?.data?.message));
-        // navigate("/auth/otp")
+            .catch((error) => {
+                toast.error(error?.data?.message || "Failed to send code");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
+
     return (
-        <div className="bg-white flex justify-center items-center gap-0 "
+        <div
+            className="flex justify-center items-center min-h-screen px-4 py-8"
             style={{
                 width: "100%",
-                background: "#2AB9A4",
-                height: "100vh",
+                background: "#020123",
             }}
         >
-
-            <div className=" bg-white flex justify-center items-center rounded-lg">
+            <div
+                className="bg-white flex justify-center items-center w-full max-w-[450px]"
+                style={{
+                    borderRadius: "20px",
+                    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                }}
+            >
                 <Form
-                    name="normal_login"
-                    className="password-form"
+                    name="forget_password"
+                    className="login-form w-full"
                     initialValues={{
                         remember: true,
                     }}
-                    style={{ width: "630px", background: "white", borderRadius: "12px", padding: "90px 57px" }}
-
+                    style={{
+                        background: "white",
+                        borderRadius: "20px",
+                        padding: "30px 20px",
+                    }}
                     onFinish={onFinish}
                 >
-                    <div className="text-center mb-10">
-                        <h1 style={{ fontSize: "30px", color: "#494949", textAlign: "center" }}>Forget Password?</h1>
-                        <p>Please enter your email to get verification code</p>
-                    </div>
+                    <h1
+                        className="text-xl sm:text-2xl text-center font-semibold mb-2"
+                        style={{
+                            color: "#1a1a1a",
+                        }}
+                    >
+                        Forget Password
+                    </h1>
 
-                    <div style={{ marginBottom: "24px" }}>
-                        <label htmlFor="email" style={{ display: "block", marginBottom: "5px" }}> Email Address</label>
+                    <p
+                        style={{
+                            color: "#6b7280",
+                            textAlign: "center",
+                            marginBottom: "30px",
+                            fontSize: "14px",
+                        }}
+                    >
+                        Please enter your email to get verification code
+                    </p>
+
+                    <div style={{ marginBottom: "20px" }}>
+                        <label
+                            htmlFor="email"
+                            style={{
+                                display: "block",
+                                marginBottom: "8px",
+                                color: "#374151",
+                                fontSize: "14px",
+                            }}
+                        >
+                            Email address:
+                        </label>
                         <Form.Item
                             style={{ marginBottom: 0 }}
                             name="email"
@@ -59,41 +101,36 @@ const ForgetPassword = () => {
                                 placeholder="esteban_schiller@gmail.com"
                                 type="email"
                                 style={{
-                                    border: "1px solid #E0E4EC",
-                                    height: "52px",
-                                    background: "white",
+                                    border: "none",
+                                    height: "48px",
+                                    background: "#F5F5F5",
                                     borderRadius: "8px",
                                     outline: "none",
+                                    fontSize: "14px",
                                 }}
-
                             />
                         </Form.Item>
                     </div>
 
-                    <Form.Item>
+                    <Form.Item style={{ marginBottom: 0 }}>
                         <Button
                             type="primary"
                             htmlType="submit"
-                            className="login-form-button rounded-3xl"
+                            className="login-form-button"
                             block
+                            disabled={loading}
                             style={{
-                                height: "45px",
-                                fontWeight: "400px",
-                                fontSize: "18px",
-                                background: "#2AB9A4",
-                                color: "white",
-                                alignSelf: "bottom",
-                                marginTop: "30px",
+                                height: "48px",
+                                fontWeight: "500",
+                                fontSize: "16px",
+                                background: "#EFC11F",
+                                borderColor: "#EFC11F",
+                                color: "#1a1a1a",
+                                marginTop: "20px",
+                                borderRadius: "8px",
                             }}
                         >
-                            <button
-                                className="login-form-forgot "
-                                style={{ color: "#FFF" }}
-                           
-                            >
-                                Countinue
-                            </button>
-
+                            {loading ? <Spin style={{ color: "#1a1a1a" }} /> : "Send a Code"}
                         </Button>
                     </Form.Item>
                 </Form>

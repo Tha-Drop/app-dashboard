@@ -3,16 +3,14 @@ import React from 'react';
 
 const Loading = () => {
     return (
-        <div>
-            <div style={{
+        <div style={{
             display: 'flex',
             justifyContent: 'center',
-            marginTop:'200px',
-            height: '100vh',
-            width: '80vw'
+            alignItems: 'center',
+            minHeight: '50vh',
+            width: '100%',
         }}>
             <Spin size="large" />
-        </div>
         </div>
     );
 };

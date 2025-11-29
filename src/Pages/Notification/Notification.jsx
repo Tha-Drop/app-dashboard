@@ -1,64 +1,50 @@
-import { Button, Table } from 'antd';
-import { IoArrowBackSharp } from 'react-icons/io5';
-import { RiDeleteBin6Line } from 'react-icons/ri';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 
-
-
-const data = [
+const notifications = [
     {
-        key: '1',
-        notification: 'A new user has applied for gold membership packages and waiting for approval, review the application for approval.',
-        time: 'Just Now',
+        id: 1,
+        title: 'New Host Registration:',
+        description: 'John Smith has registered as a new host and is awaiting approval. Please review their profile and documents.',
     },
     {
-        key: '2',
-        notification: 'Swap ID #12344 failed due to insufficient balance on User A\'s account. Swap ID #12344 failed due to insufficient balance on User A\'s account.',
-        time: '30 min ago',
+        id: 2,
+        title: 'Event Booking Confirmed:',
+        description: 'Holiday Party event scheduled for Dec 25, 2024 has been successfully booked by Sarah Johnson. Total amount: $850.',
     },
     {
-        key: '3',
-        notification: 'Swap ID #12345 between User A and User B has been successfully completed. Swap ID #12345 between User A and User B has been successfully completed.',
-        time: '6 hours ago',
-    }
-]
+        id: 3,
+        title: 'Payment Received:',
+        description: 'Payment of $1,250 has been received from Corporate Events Inc. for the New Year Celebration event booking.',
+    },
+];
 
 const Notification = () => {
-    const columns = [
-        {
-            dataIndex: 'notification',
-            key: 'notification',
-            render: text => <span>{text}</span>,
-        },
-        {
-            dataIndex: 'time',
-            key: 'time',
-            width: '150px',
-            render: text => <span>{text}</span>,
-        },
-        {
-            key: 'action',
-            width: '50px',
-            render: (text, record) => (
-                <Button type="text" icon={<RiDeleteBin6Line size={20} className='text-[#D9000A]' />} onClick={() => handleDelete(record.key)} />
-            ),
-        },
-    ];
-    const handleDelete = key => {
-        console.log(`Delete notification with key: ${key}`);
-    }
     return (
-        <div>
-            <div className="flex justify-between items-center gap-4">
-                <h3 className="text-[#242424] text-[20px] font-semibold flex items-center gap-2"> <IoArrowBackSharp className='text-[#2AB9A4]' />Notifications</h3>
-
+        <div className="bg-white rounded-lg p-6">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-8">
+                <Link to={-1}>
+                    <FaArrowLeft size={18} className="text-[#EFC11F]" />
+                </Link>
+                <span className="font-semibold text-[20px] text-[#020123]">All Notifications</span>
             </div>
-            <div>
-                <h2 className='text-[18px] font-semibold py-2'>Total 128 Notifications</h2>
-                <Table columns={columns} dataSource={data} pagination={false}
-                    className="custom-pagination" />
+
+            {/* Notifications List */}
+            <div className="space-y-8 px-4">
+                {notifications.map((notification) => (
+                    <div key={notification.id} className="flex gap-2">
+                        <span className="text-gray-700 font-medium">{notification.id}</span>
+                        <div>
+                            <span className="font-semibold text-[#020123]">{notification.title}</span>
+                            <span className="text-gray-600 ml-1">{notification.description}</span>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );
-}
+};
 
 export default Notification;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Spin } from "antd";
-import { CiEdit } from "react-icons/ci";
-import profile from "../../assets/images/admin.png";
+import { Link } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
 import { useChangePasswordMutation } from "../../redux/Api/user";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -12,7 +12,7 @@ import {
 } from "../../redux/Api/adminApi";
 import { imageUrl } from "../../redux/Api/baseApi";
 import { toast } from "react-toastify";
-const admin = false;
+
 const Profile = () => {
   const [image, setImage] = useState();
   const [form] = Form.useForm();
@@ -27,7 +27,6 @@ const Profile = () => {
     useChangePasswordMutation();
 
   const { data: adminData, isLoading: adminLoading } = useGetAllAdminQuery();
-  console.log(adminData )
 
   const handlePageChange = (tab) => {
     setTab(tab);
@@ -102,13 +101,22 @@ const Profile = () => {
     return <Spin size="large" />;
   }
 
-  const admin = adminData?.data?.[0];
-  console.log("image", image);
+  const adminUser = adminData?.data?.[0];
+
   return (
-    <div>
-      <div className="rounded-md   bg-[#FEFEFE]">
-        <div className=" py-9 px-10 rounded flex items-center justify-center flex-col gap-6">
-          <div className="relative w-[140px] h-[124px] mx-auto">
+    <div className="bg-white rounded-lg p-3 sm:p-4 md:p-6">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-4 sm:mb-6">
+        <Link to={-1}>
+          <FaArrowLeft size={18} className="text-[#EFC11F]" />
+        </Link>
+        <span className="font-semibold text-lg sm:text-[20px] text-[#020123]">Profile</span>
+      </div>
+
+      {/* Profile Content */}
+      <div className="rounded-md bg-[#FEFEFE]">
+        <div className="py-6 sm:py-9 px-4 sm:px-10 rounded flex items-center justify-center flex-col gap-4">
+          <div className="relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] mx-auto">
             <input
               type="file"
               onChange={handleImageChange}
@@ -116,17 +124,13 @@ const Profile = () => {
               style={{ display: "none" }}
             />
             <img
-              style={{ width: 140, height: 140, borderRadius: "100%" }}
-              //   src={`${admin.avatar} ?${imageUrl}${admin.avatar} : ${image} `}
-              //   src={
-              //     admin?.avatar
-              //       ? `${imageUrl}${admin.avatar}`
-              //       : URL.createObjectURL(image)
-              //   }
+              className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] rounded-full object-cover border-4 border-gray-100"
               src={`${
                 image
                   ? URL.createObjectURL(image)
-                  : `${imageUrl}/${admin?.avatar}`
+                  : adminUser?.avatar
+                  ? `${imageUrl}/${adminUser?.avatar}`
+                  : "https://ui-avatars.com/api/?name=" + encodeURIComponent(adminUser?.name || "Admin") + "&background=EFC11F&color=020123"
               }`}
               alt="Admin Profile"
             />
@@ -134,57 +138,51 @@ const Profile = () => {
             {tab === "Profile" && (
               <label
                 htmlFor="img"
-                className="
-                            absolute top-[80px] -right-2
-                            bg-[var(--primary-color)]
-                            rounded-full
-                            w-6 h-6
-                            flex items-center justify-center
-                            cursor-pointer
-                        "
+                className="absolute bottom-2 right-0 bg-[#EFC11F] rounded-full w-7 h-7 flex items-center justify-center cursor-pointer shadow-md"
               >
-                <IoCameraOutline className="text-white" />
+                <IoCameraOutline className="text-white" size={16} />
               </label>
             )}
           </div>
           <div className="w-fit">
-            <p className="text-[#575757] text-[24px] leading-[32px] font-semibold">
-              {admin?.name || "A"}
+            <p className="text-[#020123] text-lg sm:text-[20px] leading-[28px] font-semibold">
+              {adminUser?.name || "Admin"}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-6 mb-6">
+        {/* Tabs */}
+        <div className="flex items-center justify-center gap-4 sm:gap-8 mb-4 sm:mb-6 px-2">
           <p
             onClick={() => handlePageChange("Profile")}
             className={`
-                        ${
-                          tab === "Profile"
-                            ? "border-[var(--primary-color)] border-b-2 font-semibold text-[var(--primary-color)]"
-                            : "border-b-2 border-transparent font-normal text-gray-600"
-                        }
-                        cursor-pointer text-[16px] leading-5  
-                    `}
+              ${
+                tab === "Profile"
+                  ? "border-[#EFC11F] border-b-2 font-semibold text-[#EFC11F]"
+                  : "border-b-2 border-transparent font-normal text-gray-500"
+              }
+              cursor-pointer text-[13px] sm:text-[14px] leading-5 pb-1 transition-all min-h-[44px] sm:min-h-0 flex items-center
+            `}
           >
             Edit Profile
           </p>
           <p
             onClick={() => handlePageChange("Change Password")}
             className={`
-                        ${
-                          tab === "Change Password"
-                            ? "border-[var(--primary-color)] border-b-2 font-semibold text-[var(--primary-color)]"
-                            : "border-b-2 border-transparent font-normal  text-gray-600"
-                        }
-                         cursor-pointer text-base leading-[18px]  
-                    `}
+              ${
+                tab === "Change Password"
+                  ? "border-[#EFC11F] border-b-2 font-semibold text-[#EFC11F]"
+                  : "border-b-2 border-transparent font-normal text-gray-500"
+              }
+              cursor-pointer text-[13px] sm:text-[14px] leading-5 pb-1 transition-all min-h-[44px] sm:min-h-0 flex items-center
+            `}
           >
             Change Password
           </p>
         </div>
         {tab === "Profile" ? (
-          <div className="max-w-[480px] mx-auto rounded-lg p-6">
-            <h1 className="text-center text-[var(--primary-color)] leading-7 text-2xl font-medium mb-7">
+          <div className="max-w-[420px] mx-auto rounded-lg px-3 sm:px-6 pb-6">
+            <h1 className="text-center text-[#020123] leading-7 text-base sm:text-lg font-semibold mb-4 sm:mb-6">
               Edit Your Profile
             </h1>
             <Form
@@ -200,31 +198,19 @@ const Profile = () => {
             >
               <Form.Item
                 name="name"
-                label={<p className="text-[16px] font-normal">User Name</p>}
+                label={<span className="text-gray-700 text-sm">User Name</span>}
               >
                 <Input
-                  style={{
-                    width: "100%",
-                    height: 40,
-                    borderRadius: "5px",
-                    color: "#919191",
-                  }}
-                  className="text-[16px] leading-5"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="Asadujjaman"
                 />
               </Form.Item>
               <Form.Item
                 name="email"
-                label={<p className="text-[16px] font-normal">Email</p>}
+                label={<span className="text-gray-700 text-sm">Email</span>}
               >
                 <Input
-                  style={{
-                    width: "100%",
-                    height: 40,
-                    borderRadius: "5px",
-                    color: "#919191",
-                  }}
-                  className="text-[16px] leading-5"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="xyz@gmail.com"
                   disabled
                 />
@@ -232,67 +218,45 @@ const Profile = () => {
 
               <Form.Item
                 name="phoneNumber"
-                label={<p className="text-[16px] font-normal">Contact No</p>}
+                label={<span className="text-gray-700 text-sm">Contact no</span>}
               >
                 <Input
-                  style={{
-                    width: "100%",
-                    height: 48,
-                    borderRadius: "5px",
-                    color: "#919191",
-                  }}
-                  className="text-[16px] leading-5"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="+9900700007"
                 />
               </Form.Item>
               <Form.Item
                 name="address"
-                label={<p className="text-[16px] font-normal">Address</p>}
+                label={<span className="text-gray-700 text-sm">Address</span>}
               >
                 <Input
-                  style={{
-                    width: "100%",
-                    height: 48,
-                    borderRadius: "5px",
-                    color: "#919191",
-                  }}
-                  className="text-[16px] leading-5"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="79/A Joker Vila, Gotham City"
                 />
               </Form.Item>
 
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  loading={updateLoading}
-                  style={{
-                    width: 197,
-                    height: 48,
-                    color: "#FCFCFC",
-                    backgroundColor: "#020123",
-                  }}
-                  className="font-normal text-[16px] leading-6 rounded-full"
+              <div className="flex justify-center mt-4">
+                <button
+                  type="submit"
+                  disabled={updateLoading}
+                  className={`bg-[#020123] text-white py-3 px-8 sm:px-12 rounded-md font-medium hover:bg-[#0a0a2e] transition-all min-h-[44px] w-full sm:w-auto ${
+                    updateLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  Save & Changes
-                </Button>
-              </Form.Item>
+                  {updateLoading ? "Saving..." : "Save Change"}
+                </button>
+              </div>
             </Form>
           </div>
         ) : (
-          <div className="max-w-[481px] mx-auto rounded-lg p-6">
-            <h1 className="text-center text-[var(--primary-color)] leading-7 text-2xl font-medium mb-7">
-              Edit Your Profile
+          <div className="max-w-[420px] mx-auto rounded-lg px-3 sm:px-6 pb-6">
+            <h1 className="text-center text-[#020123] leading-7 text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+              Change Password
             </h1>
             <Form layout="vertical" onFinish={onFinish} form={form}>
               <Form.Item
                 name="password"
-                label={
-                  <p className="text-[#415D71] text-sm leading-5 poppins-semibold">
-                    Current Password
-                  </p>
-                }
+                label={<span className="text-gray-700 text-sm">Current Password</span>}
                 rules={[
                   {
                     required: true,
@@ -301,14 +265,7 @@ const Profile = () => {
                 ]}
               >
                 <Input.Password
-                  style={{
-                    width: "100%",
-                    height: "42px",
-                    borderRadius: "5px",
-                    color: "black",
-                    outline: "none",
-                  }}
-                  type="text"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="***************"
                 />
               </Form.Item>
@@ -321,31 +278,16 @@ const Profile = () => {
                     message: "Please Enter New Password!",
                   },
                 ]}
-                label={
-                  <p className="text-[#415D71] text-sm leading-5 poppins-semibold">
-                    New Password
-                  </p>
-                }
+                label={<span className="text-gray-700 text-sm">New Password</span>}
               >
                 <Input.Password
-                  style={{
-                    width: "100%",
-                    height: "42px",
-                    borderRadius: "5px",
-                    color: "black",
-                    outline: "none",
-                  }}
-                  type="text"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="************"
                 />
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="text-[#415D71] text-sm leading-5 poppins-semibold">
-                    Confirm Password
-                  </p>
-                }
+                label={<span className="text-gray-700 text-sm">Confirm Password</span>}
                 name="confirmPassword"
                 rules={[
                   {
@@ -355,55 +297,24 @@ const Profile = () => {
                 ]}
               >
                 <Input.Password
-                  style={{
-                    width: "100%",
-                    height: "42px",
-                    borderRadius: "5px",
-                    color: "black",
-                    outline: "none",
-                  }}
-                  type="text"
+                  className="h-10 rounded-md border-gray-300"
                   placeholder="***************"
                 />
               </Form.Item>
               {passError && (
                 <p className="text-red-600 -mt-4 mb-2">{passError}</p>
               )}
-              <Form.Item
-                style={{
-                  marginBottom: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  style={{
-                    width: 197,
-                    height: 48,
-                    color: "#FFFFFF",
-                    backgroundColor: "#020123",
-                  }}
+              <div className="flex justify-center mt-4">
+                <button
+                  type="submit"
                   disabled={changePasswordLoading}
-                  className="font-normal text-[16px] leading-6 bg-[var(--primary-color)] rounded-full"
+                  className={`bg-[#020123] text-white py-3 px-8 sm:px-12 rounded-md font-medium hover:bg-[#0a0a2e] transition-all min-h-[44px] w-full sm:w-auto ${
+                    changePasswordLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  {changePasswordLoading ? (
-                    <Spin
-                      indicator={
-                        <LoadingOutlined
-                          style={{ fontSize: 24, color: "#ffffff" }}
-                          spin
-                        />
-                      }
-                    />
-                  ) : (
-                    "Save Changes"
-                  )}
-                </Button>
-              </Form.Item>
+                  {changePasswordLoading ? "Saving..." : "Save Change"}
+                </button>
+              </div>
             </Form>
           </div>
         )}

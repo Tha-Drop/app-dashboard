@@ -32,47 +32,61 @@ const Login = () => {
 
   return (
     <div
-      className="gap-0 flex-col flex justify-center items-center"
+      className="flex justify-center items-center min-h-screen px-4 py-8"
       style={{
         width: "100%",
-        background: "#2AB9A4",
-        height: "100vh",
+        background: "#020123",
       }}
     >
-      <div className="bg-white flex justify-center items-center rounded-lg">
+      <div
+        className="bg-white flex justify-center items-center w-full max-w-[450px]"
+        style={{
+          borderRadius: "20px",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Form
           name="normal_login"
-          className="login-form"
+          className="login-form w-full"
           initialValues={{
             remember: true,
           }}
           style={{
-            width: "630px",
             background: "white",
-            borderRadius: "12px",
-            padding: "90px 57px",
+            borderRadius: "20px",
+            padding: "30px 20px",
           }}
           onFinish={onFinish}
         >
           <h1
-            style={{ fontSize: "30px", color: "#38393E", textAlign: "center" }}
+            className="text-xl sm:text-2xl text-center font-semibold mb-2"
+            style={{
+              color: "#1a1a1a",
+            }}
           >
             Login to Account
           </h1>
 
           <p
             style={{
-              color: "#7D7E8A",
+              color: "#6b7280",
               textAlign: "center",
               marginBottom: "30px",
+              fontSize: "14px",
             }}
           >
             Please enter your email and password to continue
           </p>
-          <div style={{ marginBottom: "24px" }}>
+
+          <div style={{ marginBottom: "20px" }}>
             <label
               htmlFor="email"
-              style={{ display: "block", marginBottom: "5px" }}
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#374151",
+                fontSize: "14px",
+              }}
             >
               Email address:
             </label>
@@ -88,22 +102,28 @@ const Login = () => {
               ]}
             >
               <Input
-                placeholder="Enter your email address"
+                placeholder="esteban_schiller@gmail.com"
                 type="email"
                 style={{
-                  border: "1px solid #E0E4EC",
-                  height: "52px",
-                  background: "white",
+                  border: "none",
+                  height: "48px",
+                  background: "#F5F5F5",
                   borderRadius: "8px",
                   outline: "none",
+                  fontSize: "14px",
                 }}
               />
             </Form.Item>
           </div>
 
-          <div style={{ marginBottom: "24px" }}>
+          <div style={{ marginBottom: "20px" }}>
             <label
-              style={{ display: "block", marginBottom: "5px" }}
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#374151",
+                fontSize: "14px",
+              }}
               htmlFor="password"
             >
               Password
@@ -120,13 +140,14 @@ const Login = () => {
             >
               <Input.Password
                 type="password"
-                placeholder="Enter your password"
+                placeholder="••••••••"
                 style={{
-                  border: "1px solid #E0E4EC",
-                  height: "52px",
-                  background: "white",
+                  border: "none",
+                  height: "48px",
+                  background: "#F5F5F5",
                   borderRadius: "8px",
                   outline: "none",
+                  fontSize: "14px",
                 }}
               />
             </Form.Item>
@@ -141,17 +162,21 @@ const Login = () => {
           >
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox
-                style={{ color: "#6A6D7C" }}
+                style={{ color: "#6b7280", fontSize: "14px" }}
                 className="custom-checkbox"
               >
-                Remember me
+                Remember Password
               </Checkbox>
             </Form.Item>
             <Link
-              className="login-form-forgot"
+              style={{
+                color: "#EFC11F",
+                fontSize: "14px",
+                textDecoration: "none",
+              }}
               to="/auth/forget-password"
             >
-              Forgot Password
+              Forget Password?
             </Link>
           </div>
 
@@ -159,18 +184,21 @@ const Login = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="login-form-button rounded-3xl"
+              className="login-form-button"
               block
               disabled={loading}
               style={{
-                height: "52px",
-                fontWeight: "400px",
-                fontSize: "18px",
-                background: "#2AB9A4",
-                marginTop: "56px",
+                height: "48px",
+                fontWeight: "500",
+                fontSize: "16px",
+                background: "#EFC11F",
+                borderColor: "#EFC11F",
+                color: "#1a1a1a",
+                marginTop: "30px",
+                borderRadius: "8px",
               }}
             >
-              {loading ? <Spin style={{ color: "white" }} /> : "Sign In"}
+              {loading ? <Spin style={{ color: "#1a1a1a" }} /> : "Sign In"}
             </Button>
           </Form.Item>
         </Form>

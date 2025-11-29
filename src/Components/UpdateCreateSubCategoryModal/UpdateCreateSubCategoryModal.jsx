@@ -1,8 +1,7 @@
-import { Form, Input, Modal, Upload } from "antd";
-import React, { useEffect, useState } from "react";
-import { useGetSubCategoryQuery, useSubCategoryUpdateMutation } from "../../redux/Api/categoryApi";
+import { Form, Input, Modal } from "antd";
+import React, { useEffect } from "react";
+import { useSubCategoryUpdateMutation } from "../../redux/Api/categoryApi";
 import { toast } from "react-toastify";
-import { imageUrl } from "../../redux/Api/baseApi";
 
 
 const UpdateCreateSubCategoryModal = ({
@@ -12,9 +11,7 @@ const UpdateCreateSubCategoryModal = ({
   title,
 }) => {
   const [form] = Form.useForm();
-  const [updateSubCategory] = useSubCategoryUpdateMutation();
-  const { data: subCatagory } = useGetSubCategoryQuery();
-  const [fileList, setFileList] = useState([]);
+  const [updateSubCategory, { isLoading }] = useSubCategoryUpdateMutation();
 
   useEffect(() => {
     if (selectedSubCategory) {
@@ -22,19 +19,6 @@ const UpdateCreateSubCategoryModal = ({
         title: selectedSubCategory.title,
         categoryTitle: selectedSubCategory.categoryTitle,
       });
-
-      // Set the existing image as preview
-      const existingImage = selectedSubCategory.subCategoryImage
-        ? [
-            {
-              uid: "-1",
-              name: "Existing Image",
-              status: "done",
-              url: `${imageUrl}/${selectedSubCategory.subCategoryImage}`,
-            },
-          ]
-        : [];
-      setFileList(existingImage);
     }
   }, [selectedSubCategory, form]);
 
@@ -43,19 +27,14 @@ const UpdateCreateSubCategoryModal = ({
     formData.append("title", values.title);
     formData.append("categoryTitle", values.categoryTitle);
 
-    if (fileList.length > 0 && fileList[0].originFileObj) {
-      formData.append("subCategoryImage", fileList[0].originFileObj);
-    }
-
     try {
       const res = await updateSubCategory({
         id: selectedSubCategory._id,
         data: formData,
       }).unwrap();
-      console.log(res);
       toast.success("Subcategory updated successfully!");
       setOpenSunCategory(false);
-      setFileList([]);
+      form.resetFields();
     } catch (error) {
       toast.error("Failed to update subcategory.");
     }
@@ -63,26 +42,7 @@ const UpdateCreateSubCategoryModal = ({
 
   const handleCancel = () => {
     setOpenSunCategory(false);
-    setFileList([]);
-  };
-
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+    form.resetFields();
   };
 
   return (
@@ -91,47 +51,48 @@ const UpdateCreateSubCategoryModal = ({
       onCancel={handleCancel}
       footer={false}
       centered
+      width={450}
     >
-      <p className="text-center text-xl font-medium mb-4">{title}</p>
-      <Form layout="vertical" form={form} onFinish={handleSubmit}>
-        <Form.Item
-          name="categoryTitle"
-          label="Category Name"
-          rules={[{ required: true, message: "Please enter category name!" }]}
-        >
-          <Input placeholder="Enter Category Name" disabled />
-        </Form.Item>
-        <Form.Item
-          name="title"
-          label="Subcategory Name"
-          rules={[{ required: true, message: "Please enter subcategory name!" }]}
-        >
-          <Input placeholder="Enter Subcategory Name" />
-        </Form.Item>
-        <label htmlFor="">Update sub Image</label>
-        <div className="flex justify-center"> 
-        <Form.Item>
-            <Upload
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              onPreview={onPreview}
-              beforeUpload={() => false} // Prevent automatic upload
-            >
-              {fileList.length < 1 && "+ Upload"}
-            </Upload>
-       
-        </Form.Item>
-        </div>
-        <Form.Item className="flex justify-center">
-          <button
-            type="submit"
-            className="bg-[#020123] text-white px-5 py-2 rounded-md"
+      <div className="py-6 px-4">
+        <p className="text-center text-lg font-semibold mb-6">
+          <span className="text-[#020123]">+Edit</span> <span className="text-gray-500">Subcategory</span>
+        </p>
+        <Form layout="vertical" form={form} onFinish={handleSubmit}>
+          <Form.Item
+            name="categoryTitle"
+            label={<span className="text-gray-700 text-sm">Category Name</span>}
+            rules={[{ required: true, message: "Please enter category name!" }]}
           >
-            Save
-          </button>
-        </Form.Item>
-      </Form>
+            <Input
+              placeholder="Enter Category Name"
+              className="h-10 rounded-md border-gray-300"
+              disabled
+            />
+          </Form.Item>
+          <Form.Item
+            name="title"
+            label={<span className="text-gray-700 text-sm">Subcategory</span>}
+            rules={[{ required: true, message: "Please enter subcategory name!" }]}
+          >
+            <Input
+              placeholder="Enter Subcategory Name"
+              className="h-10 rounded-md border-gray-300"
+            />
+          </Form.Item>
+
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className={`bg-[#020123] text-white py-2.5 px-16 rounded-md font-medium hover:bg-[#0a0a2e] transition-all ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={isLoading}
+            >
+              {isLoading ? "Updating..." : "Update"}
+            </button>
+          </div>
+        </Form>
+      </div>
     </Modal>
   );
 };
