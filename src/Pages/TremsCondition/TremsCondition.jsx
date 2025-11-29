@@ -7,6 +7,7 @@ import {
   useGetTermsUpdateMutation,
 } from "../../redux/Api/settings";
 import { toast } from "react-toastify";
+
 const TremsCondition = () => {
   const { data: getTerms } = useGetTermsConditionsQuery();
   const [updateTerms] = useGetTermsUpdateMutation();
@@ -14,9 +15,25 @@ const TremsCondition = () => {
   const [content, setContent] = useState("");
   const [isLoading, seLoading] = useState(false);
   const [id, setId] = useState("");
+  const [editorHeight, setEditorHeight] = useState(600);
+
+  // Responsive editor height
+  useEffect(() => {
+    const updateHeight = () => {
+      if (window.innerWidth < 640) {
+        setEditorHeight(350);
+      } else if (window.innerWidth < 1024) {
+        setEditorHeight(450);
+      } else {
+        setEditorHeight(600);
+      }
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   const handleTerms = async () => {
-    // console.log(content);
     const data = {
       text: content,
     };
@@ -26,11 +43,12 @@ const TremsCondition = () => {
     console.log("res", res);
     toast.success("Terms Update successfully!");
   };
-  const config = {
+
+  const config = useMemo(() => ({
     readonly: false,
     placeholder: "Start typings...",
     style: {
-      height: 600,
+      height: editorHeight,
     },
     buttons: [
       "image",
@@ -43,26 +61,28 @@ const TremsCondition = () => {
       "brush",
       "align",
     ],
-  };
+  }), [editorHeight]);
+
   useEffect(() => {
     setContent(getTerms?.data?.text);
     setId(getTerms?.data?._id);
   }, [getTerms]);
+
   return (
-    <>
-      <div className="flex justify-start items-center gap-2 mb-3 relative m-5">
-        <div className="absolute top-6 left-2 flex items-center">
-          <Link
-            to={-1}
-            className="py-1 px-2 rounded-md flex justify-start items-center gap-1  "
-          >
-            <IoArrowBackSharp className="text-[var(--primary-color)]" />
-          </Link>{" "}
-          <p className="font-semibold">Terms & Conditions</p>
-        </div>
+    <div className="bg-white rounded-lg p-3 sm:p-4 md:p-6 min-h-full">
+      {/* Header */}
+      <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+        <Link
+          to={-1}
+          className="p-1 rounded-md flex items-center"
+        >
+          <IoArrowBackSharp className="text-[#EFC11F] text-lg sm:text-xl" />
+        </Link>
+        <p className="font-semibold text-base sm:text-lg text-[#020123]">Terms & Conditions</p>
       </div>
 
-      <div className="custom-jodit-editor mx-5 ">
+      {/* Editor */}
+      <div className="custom-jodit-editor">
         <JoditEditor
           ref={editor}
           value={content}
@@ -71,16 +91,18 @@ const TremsCondition = () => {
           onBlur={(newContent) => setContent(newContent)}
           onChange={(newContent) => {}}
         />
-        <div className="flex items-center   justify-center mt-5">
+
+        {/* Save Button */}
+        <div className="flex items-center justify-center mt-4 sm:mt-6 pb-4">
           <button
             onClick={handleTerms}
-            className="bg-[var(--primary-color)]  text-white px-4 py-2 rounded-full test"
+            className="bg-[#020123] text-white px-6 sm:px-8 py-3 rounded-full font-medium min-h-[44px] w-full sm:w-auto hover:bg-[#0a0a2e] transition-all"
           >
             Save Changes
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

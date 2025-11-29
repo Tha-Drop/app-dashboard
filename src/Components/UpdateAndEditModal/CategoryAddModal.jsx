@@ -1,53 +1,31 @@
-import { Form, Input, Modal, Upload } from "antd";
-import React, { useState } from "react";
+import { Form, Input, Modal } from "antd";
+import React from "react";
 import { useUpdateCategoryMutation } from "../../redux/Api/categoryApi";
 import { toast } from "react-toastify";
 
 const CategoryAddModal = ({ openModal, setOpenModal, title }) => {
+  const [form] = Form.useForm();
   const [updateCategory, { isLoading: updating }] = useUpdateCategoryMutation();
-  const [fileList, setFileList] = useState([]);
 
   const handleSaveCategory = (values) => {
     const formData = new FormData();
     formData.append("title", values.title);
-    if (fileList.length > 0) {
-      formData.append("categoryImage", fileList[0].originFileObj);
-    }
 
     updateCategory(formData)
       .unwrap()
       .then(() => {
         setOpenModal(false);
         toast.success("Category added successfully");
-        setFileList([]); // Reset file list
+        form.resetFields();
       })
       .catch((error) => {
-        toast.error("Error adding/updating category:", error);
+        toast.error("Error adding category");
       });
   };
 
   const handleCancel = () => {
     setOpenModal(false);
-    setFileList([]); // Reset file list on modal close
-  };
-
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+    form.resetFields();
   };
 
   return (
@@ -56,43 +34,41 @@ const CategoryAddModal = ({ openModal, setOpenModal, title }) => {
       onCancel={handleCancel}
       footer={false}
       centered
+      width={500}
     >
-      <p className="text-center text-xl font-medium">{title}</p>
-      <Form layout="vertical" onFinish={handleSaveCategory}>
-        <Form.Item
-          label="Category Name"
-          name="title"
-          rules={[{ required: true, message: "Please enter the category name!" }]}
-        >
-          <Input placeholder="Enter Category" />
-        </Form.Item>
-        <label htmlFor="">Upload Image</label>
-       <div className="flex justify-center">
-       <Form.Item >
-          <Upload
-            listType="picture-card"
-            fileList={fileList}
-            onChange={onChange}
-            onPreview={onPreview}
-            beforeUpload={() => false} // Prevent automatic upload
-            style={{ width: "100%" }} // Make the upload area full width
+      <div className="py-8 px-4">
+        <Form layout="vertical" form={form} onFinish={handleSaveCategory}>
+          <Form.Item
+            label={<span className="text-gray-700 font-medium">Category Name</span>}
+            name="title"
+            rules={[{ required: true, message: "Please enter the category name!" }]}
           >
-            {fileList.length < 1 && "+ Upload"}
-          </Upload>
-        </Form.Item>
-       </div>
-        <Form.Item className="flex justify-center">
-          <button
-            type="submit"
-            className={`bg-[#020123] text-white px-5 py-2 rounded-md ${
-              updating ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={updating}
-          >
-            {updating ? "Saving..." : "Save"}
-          </button>
-        </Form.Item>
-      </Form>
+            <Input
+              placeholder="Corporate Events"
+              className="h-12 rounded-md border-gray-300"
+            />
+          </Form.Item>
+
+          <div className="flex gap-3 mt-8">
+            <button
+              type="submit"
+              className={`flex-1 bg-[#020123] text-white py-3 rounded-full font-medium hover:bg-[#0a0a2e] transition-all ${
+                updating ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={updating}
+            >
+              {updating ? "Saving..." : "Save"}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="flex-1 bg-[#D7263D] text-white py-3 rounded-full font-medium hover:bg-[#b91c30] transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </Form>
+      </div>
     </Modal>
   );
 };

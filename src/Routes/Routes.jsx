@@ -19,6 +19,7 @@ import DjManagement from "../Pages/DjManagement/DjManagement";
 import BarTender from "../Pages/BarTender/BarTender";
 import BottleGirl from "../Pages/BottleGirl/BottleGirl";
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
+import AboutUs from "../Pages/AboutUs/AboutUs";
 
 
 export const router = createBrowserRouter([
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
             {
                 path : "/notification",
                 element : <Notification/>
+            },
+            {
+                path: '/about-us',
+                element: <AboutUs />
             }
 
 
