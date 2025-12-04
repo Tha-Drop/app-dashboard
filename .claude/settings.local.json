@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"D:\\Admin Portal k\\app-dashboard\" log --oneline -10)",
+      "Bash(tree:*)",
+      "Bash(dir /s /b \"D:\\Admin Portal k\\app-dashboard\\src\\*.jsx\" \"D:\\Admin Portal k\\app-dashboard\\src\\*.js\" \"D:\\Admin Portal k\\app-dashboard\\src\\*.css\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

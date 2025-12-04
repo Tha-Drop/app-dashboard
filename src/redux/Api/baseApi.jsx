@@ -27,7 +27,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://143.110.241.146:8080",
+  baseUrl: "https://api.thadrop.net",
   // https://backend.volunhelp.com/api/v1
   // 10.0.60.118:7000
   
