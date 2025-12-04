@@ -32,14 +32,25 @@ const Login = () => {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen px-4 py-8"
+      className="login-page-container"
       style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         width: "100%",
+        height: "100%",
         background: "#020123",
+        overflow: "hidden",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "16px",
       }}
     >
       <div
-        className="bg-white flex justify-center items-center w-full max-w-[450px]"
+        className="bg-white w-full max-w-[450px]"
         style={{
           borderRadius: "20px",
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
@@ -54,14 +65,15 @@ const Login = () => {
           style={{
             background: "white",
             borderRadius: "20px",
-            padding: "30px 20px",
+            padding: "24px 20px",
           }}
           onFinish={onFinish}
         >
           <h1
-            className="text-xl sm:text-2xl text-center font-semibold mb-2"
+            className="text-xl sm:text-2xl text-center font-semibold"
             style={{
               color: "#1a1a1a",
+              marginBottom: "8px",
             }}
           >
             Login to Account
@@ -71,19 +83,19 @@ const Login = () => {
             style={{
               color: "#6b7280",
               textAlign: "center",
-              marginBottom: "30px",
+              marginBottom: "24px",
               fontSize: "14px",
             }}
           >
             Please enter your email and password to continue
           </p>
 
-          <div style={{ marginBottom: "20px" }}>
+          <div style={{ marginBottom: "16px" }}>
             <label
               htmlFor="email"
               style={{
                 display: "block",
-                marginBottom: "8px",
+                marginBottom: "6px",
                 color: "#374151",
                 fontSize: "14px",
               }}
@@ -106,7 +118,7 @@ const Login = () => {
                 type="email"
                 style={{
                   border: "none",
-                  height: "48px",
+                  height: "44px",
                   background: "#F5F5F5",
                   borderRadius: "8px",
                   outline: "none",
@@ -116,11 +128,11 @@ const Login = () => {
             </Form.Item>
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
+          <div style={{ marginBottom: "16px" }}>
             <label
               style={{
                 display: "block",
-                marginBottom: "8px",
+                marginBottom: "6px",
                 color: "#374151",
                 fontSize: "14px",
               }}
@@ -143,7 +155,7 @@ const Login = () => {
                 placeholder="••••••••"
                 style={{
                   border: "none",
-                  height: "48px",
+                  height: "44px",
                   background: "#F5F5F5",
                   borderRadius: "8px",
                   outline: "none",
@@ -158,6 +170,8 @@ const Login = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "8px",
             }}
           >
             <Form.Item name="remember" valuePropName="checked" noStyle>
@@ -188,13 +202,13 @@ const Login = () => {
               block
               disabled={loading}
               style={{
-                height: "48px",
+                height: "44px",
                 fontWeight: "500",
                 fontSize: "16px",
                 background: "#EFC11F",
                 borderColor: "#EFC11F",
                 color: "#1a1a1a",
-                marginTop: "30px",
+                marginTop: "24px",
                 borderRadius: "8px",
               }}
             >
