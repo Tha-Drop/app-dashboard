@@ -2,26 +2,27 @@ name: Dashboard
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Nodejs
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
-          node-version: 20.19.4
-      - name: Install npm dependencies
+          node-version: 20
+
+      - name: Install dependencies
         run: npm install --legacy-peer-deps
+
       - name: Build application
         run: |
-          #echo "${{ secrets.ENV_FILE_WAP_STAGING }}" > .env
-          CI="" npm run build
+          npm run build
+          ls -la build
+
       - name: Deploy
         uses: easingthemes/ssh-deploy@main
         env:
@@ -32,3 +33,4 @@ jobs:
           TARGET: "/var/www/tha-drop-dashboard"
           SCRIPT_BEFORE: |
             rm -rf /var/www/tha-drop-dashboard
+            mkdir -p /var/www/tha-drop-dashboard
