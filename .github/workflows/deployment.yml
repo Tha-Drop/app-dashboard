@@ -29,7 +29,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.USERNAME }}
-          SOURCE: 'build/'
+          SOURCE: 'dist/'
           TARGET: "/var/www/tha-drop-dashboard"
           SCRIPT_BEFORE: |
             rm -rf /var/www/tha-drop-dashboard
