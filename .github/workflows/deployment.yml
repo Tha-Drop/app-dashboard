@@ -29,6 +29,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.USERNAME }}
           SOURCE: 'build/'
-          TARGET: "/var/www/tha-drop-dashboard/build"
+          TARGET: "/var/www/tha-drop-dashboard"
           SCRIPT_BEFORE: |
-            rm -rf /var/www/tha-drop-dashboard/build
+            rm -rf /var/www/tha-drop-dashboard
