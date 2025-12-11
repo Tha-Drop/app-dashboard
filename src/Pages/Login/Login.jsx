@@ -4,29 +4,38 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoginAdminMutation } from "../../redux/Api/user";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../redux/features/auth/authSlice";
+import { toast } from "react-toastify";
+import { MdErrorOutline } from "react-icons/md";
 
 const Login = () => {
   const [loginAdmin] = useLoginAdminMutation();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onFinish = (values) => {
-    setLoading(true); // Start loading spinner
+    setLoading(true);
+    setError("");
+
     loginAdmin(values)
       .unwrap()
       .then((payload) => {
         if (payload) {
-          dispatch(setToken(payload?.data?.accessToken))
-
+          dispatch(setToken(payload?.data?.accessToken));
+          toast.success("Welcome back! Login successful.", {
+            icon: "👋",
+          });
           navigate("/");
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        const errorMessage = err?.data?.message || "Invalid email or password. Please try again.";
+        setError(errorMessage);
+        toast.error(errorMessage);
       })
       .finally(() => {
-        setLoading(false); // Stop loading spinner
+        setLoading(false);
       });
   };
 
@@ -90,6 +99,27 @@ const Login = () => {
             Please enter your email and password to continue
           </p>
 
+          {/* Error Alert Box */}
+          {error && (
+            <div
+              style={{
+                background: "#FEF2F2",
+                border: "1px solid #FEE2E2",
+                borderRadius: "8px",
+                padding: "12px 16px",
+                marginBottom: "20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <MdErrorOutline size={20} style={{ color: "#DC2626", flexShrink: 0 }} />
+              <p style={{ color: "#DC2626", fontSize: "14px", margin: 0 }}>
+                {error}
+              </p>
+            </div>
+          )}
+
           <div style={{ marginBottom: "16px" }}>
             <label
               htmlFor="email"
@@ -109,15 +139,20 @@ const Login = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: "Email is required",
+                },
+                {
+                  type: "email",
+                  message: "Please enter a valid email address",
                 },
               ]}
             >
               <Input
-                placeholder="esteban_schiller@gmail.com"
+                placeholder="admin@example.com"
                 type="email"
+                onChange={() => setError("")}
                 style={{
-                  border: "none",
+                  border: error ? "1px solid #DC2626" : "none",
                   height: "44px",
                   background: "#F5F5F5",
                   borderRadius: "8px",
@@ -146,15 +181,20 @@ const Login = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your Password!",
+                  message: "Password is required",
+                },
+                {
+                  min: 6,
+                  message: "Password must be at least 6 characters",
                 },
               ]}
             >
               <Input.Password
                 type="password"
-                placeholder="••••••••"
+                placeholder="Enter your password"
+                onChange={() => setError("")}
                 style={{
-                  border: "none",
+                  border: error ? "1px solid #DC2626" : "none",
                   height: "44px",
                   background: "#F5F5F5",
                   borderRadius: "8px",
@@ -205,14 +245,22 @@ const Login = () => {
                 height: "44px",
                 fontWeight: "500",
                 fontSize: "16px",
-                background: "#EFC11F",
+                background: loading ? "#d4a91a" : "#EFC11F",
                 borderColor: "#EFC11F",
                 color: "#1a1a1a",
                 marginTop: "24px",
                 borderRadius: "8px",
+                cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              {loading ? <Spin style={{ color: "#1a1a1a" }} /> : "Sign In"}
+              {loading ? (
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                  <Spin size="small" />
+                  Signing in...
+                </span>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </Form.Item>
         </Form>

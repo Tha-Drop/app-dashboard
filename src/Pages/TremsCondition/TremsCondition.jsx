@@ -38,10 +38,12 @@ const TremsCondition = () => {
       text: content,
     };
     const id = getTerms?.data?._id;
-    console.log(id, data);
-    const res = await updateTerms({ id, data }).unwrap();
-    console.log("res", res);
-    toast.success("Terms Update successfully!");
+    try {
+      await updateTerms({ id, data }).unwrap();
+      toast.success("Terms & Conditions updated successfully!");
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to update Terms & Conditions");
+    }
   };
 
   const config = useMemo(() => ({
