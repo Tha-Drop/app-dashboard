@@ -89,11 +89,10 @@ const Profile = () => {
     updateProfile(data)
       .unwrap()
       .then(() => {
-        toast.success("Profile updated successfully");
-        // Redirect after success
+        toast.success("Profile updated successfully!");
       })
       .catch((error) => {
-        toast.error("Error updating profile:", error);
+        toast.error(error?.data?.message || "Failed to update profile. Please try again.");
       });
   };
 

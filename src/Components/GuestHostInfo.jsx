@@ -57,8 +57,7 @@ const GuestHostInfo = ({ dataSource }) => {
         )
       );
     } catch (error) {
-      console.error("Error toggling block status:", error);
-      
+      toast.error(error?.data?.message || "Error toggling block status");
     }
   };
   

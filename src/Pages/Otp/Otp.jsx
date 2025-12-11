@@ -29,7 +29,7 @@ const Otp = () => {
     };
 
     const handleVerifyOtp = async () => {
-        if (otp.length < 5) {
+        if (otp.length < 4) {
             toast.error("Please enter the complete verification code");
             return;
         }
@@ -99,7 +99,7 @@ const Otp = () => {
                         marginBottom: "30px",
                     }}
                 >
-                    enter 5 digit code that mentioned in the email
+                    enter 4 digit code that mentioned in the email
                 </p>
 
                 <div
@@ -112,7 +112,7 @@ const Otp = () => {
                     <OtpInput
                         value={otp}
                         onChange={setOtp}
-                        numInputs={5}
+                        numInputs={4}
                         inputStyle={{
                             height: "44px",
                             width: "44px",
